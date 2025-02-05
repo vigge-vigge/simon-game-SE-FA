@@ -1,9 +1,6 @@
 module.exports = {
-    testEnvironment: 'jsdom',
-  };
-/** @type {import('jest').Config} */
-const config = {
-    verbose: true,
-  };
-  
-  module.exports = config;  
+  transform: {
+    '^.+\\.m?js$': 'babel-jest', // Use Babel to transform JavaScript files
+  },
+  TestEnvironment: 'jsdom'
+};

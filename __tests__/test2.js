@@ -1,5 +1,4 @@
-const app = require('../js/app.js');
- // Adjust path as necessary
+const app = require('../js/app.js'); // Adjust path as necessary
 
 describe('Correct Button Click Progression', () => {
     let startButton;

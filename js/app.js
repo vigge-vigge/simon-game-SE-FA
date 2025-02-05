@@ -1,3 +1,11 @@
+const { JSDOM } = require('jsdom');
+
+const app = require('../js/app.js'); // Adjust path as necessary
+module.exports = {
+	testEnvironment: 'jsdom',
+  };
+  
+
 // Global variable to store current level, best game level and current answer array
 let level = 1;
 let bestLevel = 1;

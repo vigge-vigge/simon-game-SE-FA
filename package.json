@@ -1,0 +1,25 @@
+{
+  "name": "simon-game-se",
+  "version": "1.0.0",
+  "description": "This is an interactive Simon Game written in VanillaJS/CSS/HTML to simulate the classic Simon Electronic Memory Game.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vigge-vigge/simon-game-SE-FA.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vigge-vigge/simon-game-SE-FA/issues"
+  },
+  "homepage": "https://github.com/vigge-vigge/simon-game-SE-FA#readme",
+  "dependencies": {
+    "glob": "^11.0.1",
+    "jsdom": "^26.0.0",
+    "lru-cache": "^11.0.2"
+  }
+}

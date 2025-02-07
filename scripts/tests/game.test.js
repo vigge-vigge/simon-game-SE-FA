@@ -1,119 +1,85 @@
-/**
- * @jest-environment jsdom
- */
-/** @type {import('jest').Config} */
-const config = {
-  verbose: true,
-};
+beforeEach(() => {
+  // Manually mock the DOM before running each test
+  document.body.innerHTML = `
+    <div id="score-display">0</div>
+    <div id="level-display">Level: 1</div>
+    <div id="game-over" style="display: none;">
+      <div id="final-score"></div>
+      <div id="final-level"></div>
+      <button class="start-btn">Start</button>
+    </div>
+    <button class="start-btn">Start Game</button>
+    <div id="circle1" class="circle"></div>
+    <div id="circle2" class="circle"></div>
+    <div id="circle3" class="circle"></div>
+    <div id="circle4" class="circle"></div>
+  `;
 
-module.exports = config;
+  // Mock the setTimeout to avoid actual delays in tests
+  global.setTimeout = jest.fn((fn) => fn());
+});
 
-import fs from "fs";
-import { game, newGame, addTurn, lightsOn, showTurns, playerTurn } from "../game.js";
+// Test to start a new game and reset the state
+test('should start a new game and reset state', () => {
+  window.initiateNewGame(); // Function is now accessible via window
 
-jest.spyOn(window, "alert").mockImplementation(() => { })
+  expect(window.gameState.score).toBe(0);
+  expect(window.gameState.level).toBe(1);
+  expect(window.gameState.pattern.length).toBe(0);
+  expect(window.gameState.playerPattern.length).toBe(0);
+  expect(window.gameState.stepIndex).toBe(0);
+  expect(document.getElementById('game-over').style.display).toBe('none');
+});
 
+// Test to update the score correctly
+test('should update score and level correctly', () => {
+  window.gameState.score = 5;
+  window.gameState.level = 3;
+  window.refreshScore(); // Function is now accessible via window
+  window.refreshLevel(); // Function is now accessible via window
 
-// Runs before all tests to simulate the HTML document environment
-beforeAll(() => {
-  let fileContent = fs.readFileSync("index.html", "utf-8") // Read the HTML file
-  document.open() // Open a new document
-  document.write(fileContent) // Write the HTML content into the document
-  document.close() // Close the document
-})
+  expect(document.getElementById("score-display").textContent).toBe("5");
+  expect(document.getElementById("level-display").textContent).toBe("Level: 3");
+});
 
-// Tests for verifying keys in the 'game' object
-describe("Game object contain correct keys", () => {
-  test("score key exists", () => {
-    expect("score" in game).toBe(true) // Check if 'score' key exists
-  })
-  test("currentGame key exists", () => {
-    expect("currentGame" in game).toBe(true) // Check if 'currentGame' key exists
-  })
-  test("playerMoves key exists", () => {
-    expect("playerMoves" in game).toBe(true) // Check if 'playerMoves' key exists
-  })
-  test("choices key exists", () => {
-    expect("choices" in game).toBe(true) // Check if 'choices' key exists
-  })
-  test("choices should contain correct id's", () => {
-    expect(game.choices).toEqual(['button1', 'button2', 'button3', 'button4']) // Verify that choices contain the correct button IDs
-  })
-})
+// Test to start a new sequence
+test('should start a new sequence', () => {
+  window.startNewSequence(); // Function is now accessible via window
+  expect(window.gameState.pattern.length).toBeGreaterThan(0); // Ensure a new pattern is generated
+  expect(window.gameState.playerPattern.length).toBe(0); // Player's pattern should be reset
+});
 
-// Tests for the 'newGame' function
-describe("newGame function work correctly", () => {
-  beforeAll(() => {
-    // Setup initial game state before testing 'newGame'
-    game.score = 42
-    game.currentGame = ["button1", "button2"]
-    game.playerMoves = ["button1", "button2"]
-    document.getElementById("score").innerText = "42"
-    newGame() // Call the newGame function to reset the game state
-  })
-  test("should set game score to zero", () => {
-    expect(game.score).toEqual(0) // Verify the score is reset to 0
-  })
-  test("should have one move in currentGame array", () => {
-    expect(game.currentGame.length).toBe(1) // Ensure only one move is in the current game sequence
-  })
-  test("should clear playerMoves array", () => {
-    expect(game.playerMoves).toEqual([]) // Ensure the playerMoves array is cleared
-  })
-  test("should display zero for the element with id of score", () => {
-    expect(document.getElementById("score").innerText).toEqual(0) // Check that score display is reset to 0
-  })
-  test("expect data-listener to be true", () => {
-    const elements = document.getElementsByClassName("circle")
-    for (let element of elements) {
-      expect(element.getAttribute("data-listener")).toBe("true") // Ensure that all circles have 'data-listener' attribute set to 'true'
-    }
-  })
-})
+// Test to simulate user input
+test('should process user input correctly', () => {
+  const mockEvent = { target: { id: 'circle1' } };
 
-// Tests for gameplay functionality
-describe("gameplay works correctly ", () => {
-  beforeEach(() => {
-    // Reset game state before each test
-    game.score = 0
-    game.currentGame = []
-    game.playerMoves = []
-    addTurn() // Add a turn to the game before each test
-  })
-  afterEach(() => {
-    // Reset game state after each test
-    game.score = 0
-    game.currentGame = []
-    game.playerMoves = []
-  })
-  test("addTurns add new turn to the game", () => {
-    addTurn() // Add another turn
-    expect(game.currentGame.length).toBe(2) // Ensure that the game has 2 turns after adding one
-  })
-  test("should add correct class to light-up the button", () => {
-    let button = document.getElementById(game.currentGame[0]) // Get the button from the game sequence
-    lightsOn(game.currentGame[0]) // Call lightsOn to light up the button
-    expect(button.classList).toContain('light') // Ensure the button has the 'light' class added
-  })
-  test('showTurns should update game.TurnNumber', () => {
-    game.turnNumber = 42
-    showTurns() // Call showTurns function
-    expect(game.turnNumber).toBe(0) // Ensure the turn number is reset to 0
-  })
-  test("should increment the score if the turn is correct", () => {
-    game.playerMoves.push(game.currentGame[0]) // Add the correct move to playerMoves
-    playerTurn() // Simulate player's turn
-    expect(game.score).toBe(1) // Verify that the score has been incremented
-  });
-  // test("clicking during computer sequence should fail", () => {
-  //   showTurns();
-  //   game.lastButton = "";
-  //   document.getElementById("button2").click();
-  //   expect(game.lastButton).toEqual("");
-  // });
-  test('should call an alert when the move is wrong', () => { 
-    game.playerMoves.push("wrong") // Add an incorrect move
-    playerTurn() // Simulate player's turn
-    expect(window.alert).toBeCalledWith("Wrong move !") // Check if the alert is called with the correct message
-  })
-})
+  window.processUserInput(mockEvent); // Function is now accessible via window
+
+  expect(window.gameState.playerPattern.length).toBe(1); // Ensure the player pattern has been updated
+  expect(window.gameState.playerPattern[0]).toBe('circle1'); // Ensure correct button was added
+});
+
+// Test for incorrect user input (game over)
+test('should trigger game over when user input is incorrect', () => {
+  window.gameState.pattern = ['circle1'];
+  window.gameState.playerPattern = ['circle2'];
+
+  window.triggerGameOver(); // Function is now accessible via window
+
+  expect(document.getElementById('final-score').textContent).toBe('0');
+  expect(document.getElementById('final-level').textContent).toBe('1');
+  expect(document.getElementById('game-over').style.display).toBe('block');
+});
+
+// Test to ensure the button highlight works correctly
+test('should highlight a button correctly', () => {
+  const mockSetTimeout = jest.fn();
+  global.setTimeout = mockSetTimeout; // Mock setTimeout function
+
+  const mockButton = { classList: { add: jest.fn(), remove: jest.fn() } };
+  document.getElementById = jest.fn().mockReturnValue(mockButton);
+  window.highlightButton('circle1'); // Function is now accessible via window
+
+  expect(mockButton.classList.add).toHaveBeenCalledWith('light');
+  expect(mockSetTimeout).toHaveBeenCalledWith(expect.any(Function), 400);
+});

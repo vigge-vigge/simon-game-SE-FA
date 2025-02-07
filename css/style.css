@@ -1,87 +1,73 @@
 body {
-  font-family: Montserrat, sans-serif;
-}
-
-h1 {
-  font-weight: 300;
-  margin-bottom: 10px;
-}
-
-h2 {
-  font-weight: 200;
-  margin-top: 10px;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
 }
 
 .container {
-  position: relative;
-  width: 500px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 35px;
   text-align: center;
 }
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(2, 150px);
+  grid-template-rows: repeat(2, 150px);
+  gap: 10px;
+  margin: 20px auto;
+}
+
 .circle {
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
-  position: absolute;
   cursor: pointer;
-}
-.circle1 {
-  height: 500px;
-  width: 500px;
-  background-color: #009FE3;
+  opacity: 0.7;
+  transition: opacity 0.3s;
 }
 
-.circle2 {
-  height: 400px;
-  width: 400px;
-  background-color: #445261;
-  top: 50px;
-  left: 50px;
-}
-.circle3 {
-  height: 300px;
-  width: 300px;
-  background-color: #EFB920;
-  top: 100px;
-  left: 100px;
-}
-.circle4 {
-  height: 200px;
-  width: 200px;
-  background-color: #23BBBB;
-  top: 150px;
-  left: 150px;
+.circle:hover {
+  opacity: 1;
 }
 
-.scorebox {
-  border-radius: 25%;
-  box-sizing: border-box;
-  position: absolute;
-  background-color: #E6ECF0;
-  height: 80px;
-  width: 80px;
-  top: 210px;
-  left: 210px;
-  text-align: center;
-  color: #445261;
-  font-size: 3em;
-  padding-top: 10px;
+#circle1 {
+  background-color: red;
 }
 
-.button {
-  background-color: #FF5A60;
-  color: #FFF;
-  border: 0;
-  height: 40px;
-  width: 160px;
-  border-radius: 5px;
-  margin: 0 auto;
-  display: block;
-  top: 550px;
-  position: relative;
-  font-weight: 600;
+#circle2 {
+  background-color: blue;
+}
+
+#circle3 {
+  background-color: green;
+}
+
+#circle4 {
+  background-color: yellow;
 }
 
 .light {
-  opacity: 0.4;
+  opacity: 1;
+}
+
+.controls {
+  margin-top: 20px;
+}
+
+.start-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.game-over {
+  display: none;
+  margin-top: 20px;
+}
+
+.game-over h2 {
+  color: #ff0000;
 }

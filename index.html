@@ -1,29 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jest Simon Game</title>
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simon Game</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-    <div class="container">
-        <h1>simon</h1>
-        <h2>memory game</h2>
+  <div class="container">
+    <h1>Simon Game</h1>
+    <div class="game-board">
+      <div class="circle" id="circle1"></div>
+      <div class="circle" id="circle2"></div>
+      <div class="circle" id="circle3"></div>
+      <div class="circle" id="circle4"></div>
     </div>
-    <div class="container">
-        <div data-listener="false" class="circle circle1" id="button1"></div>
-        <div data-listener="false" class="circle circle2" id="button2"></div>
-        <div data-listener="false" class="circle circle3" id="button3"></div>
-        <div data-listener="false" class="circle circle4" id="button4"></div>
-        <div class="scorebox" id="score">0</div>
-        <button class="button">new game</button>
+    <div class="controls">
+      <button class="start-btn">Start Game</button>
+      <div class="score-display">Score: <span id="score-display">0</span></div>
+      <div class="level-display">Level: <span id="level-display">1</span></div>
     </div>
-    <script type="module" src="scripts/game.js"></script>
+    <div id="game-over" class="game-over">
+      <h2>Game Over!</h2>
+      <p>Final Score: <span id="final-score">0</span></p>
+      <p>Final Level: <span id="final-level">1</span></p>
+      <button class="start-btn">Play Again</button>
+    </div>
+  </div>
+  <script src="scripts/game.js"></script>
 </body>
-
 </html>
